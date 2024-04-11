@@ -10,12 +10,14 @@ import (
 
 type Config struct {
 	Network   string
+	Magic     int
 	RootDir   string
 	WalletDir string
 }
 
 var globalConfig = Config{
 	Network: "preprod",
+	Magic:   1,
 }
 
 func GetConfig() *Config {

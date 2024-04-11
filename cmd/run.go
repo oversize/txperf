@@ -42,10 +42,5 @@ func init() {
 
 func runRun(cmd *cobra.Command, args []string) {
 	log.Default().Println("Run Run Command")
-
-	// Load Wallet from File
-	// walletPath := app.GetConfig().GetWalletPath("mywallet1")
-
 	app.GetApp().Run()
-
 }

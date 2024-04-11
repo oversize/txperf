@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/blinklabs-io/bursa"
+	ouroboros "github.com/blinklabs-io/gouroboros"
 )
 
 type TxPerfApp struct {
@@ -78,14 +79,39 @@ func (a TxPerfApp) newBursaWallet(walletName string) (*bursa.Wallet, error) {
 }
 
 func (a TxPerfApp) Run() error {
+
+	wallet, err := loadWallet()
+	if err != nil {
+		return fmt.Errorf("unable to load wallet %s", err.Error())
+	}
+
+	fmt.Println(wallet)
+	// Make error channel
+	errorChan := make(chan error)
+	// start error handler
+	go func() {
+		for {
+			err := <-errorChan
+			panic(err)
+		}
+	}()
+
+	o, err := ouroboros.NewConnection(
+		ouroboros.WithNetworkMagic(uint32(cfg.Magic)),
+		ouroboros.WithErrorChan(errorChan),
+		ouroboros.WithNodeToNode(false),
+	)
+
+	return nil
+}
+
+func loadWallet() (*bursa.Wallet, error) {
 	walletPath := GetConfig().GetWalletPath("mywallet1")
 	wf, err := os.ReadFile(walletPath)
 	if err != nil {
-		return fmt.Errorf("unable to read wallet file %s", err.Error())
+		return nil, fmt.Errorf("unable to read wallet file %s", err.Error())
 	}
-	nw := bursa.Wallet{}
-	json.Unmarshal(wf, &nw)
-
-	fmt.Println(nw)
-	return nil
+	newWallet := bursa.Wallet{}
+	json.Unmarshal(wf, &newWallet)
+	return &newWallet, nil
 }
