@@ -9,22 +9,30 @@ import (
 )
 
 type Config struct {
-	Network   string
-	Magic     int
-	RootDir   string
-	WalletDir string
+	Network          string
+	Magic            int
+	RootDir          string
+	WalletDir        string
+	BlockfrostApiKey string `envconfig:"BLOCKFROST_API_KEY"`
 }
 
-var globalConfig = Config{
+var globalConfig = &Config{
 	Network: "preprod",
 	Magic:   1,
+	//BlockfrostApiKey: "preprodzu4liHARfKdaVvi27p1T0sFarzZlDaZP",
 }
 
 func GetConfig() *Config {
-	return &globalConfig
+	return globalConfig
 }
 
 func LoadConfig() error {
+
+	err := envconfig.Process("txperf", globalConfig)
+	if err != nil {
+		return fmt.Errorf("error processing environment: %s", err)
+	}
+
 	rootDir, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatalf("unable to get user home dir %v", err.Error())
@@ -41,13 +49,6 @@ func LoadConfig() error {
 
 	globalConfig.RootDir = rootDir
 	globalConfig.WalletDir = walletDir
-
-	if err := envconfig.Process("bursa", &globalConfig); err != nil {
-		return fmt.Errorf(
-			"failed loading config from environment: %s",
-			err,
-		)
-	}
 
 	return nil
 }

@@ -12,9 +12,8 @@ import (
 
 func main() {
 	err := app.LoadApp()
-
 	if err != nil {
-		log.Fatalf("unable to load app %s", err)
+		log.Fatalf("could not load app: %s", err)
 	}
 	cmd.Execute()
 }
