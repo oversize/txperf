@@ -20,7 +20,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: runWallet,
+	Run: wallet,
 }
 
 func init() {
@@ -39,7 +39,7 @@ func init() {
 	walletCmd.MarkFlagRequired("name")
 }
 
-func runWallet(cmd *cobra.Command, args []string) {
+func wallet(cmd *cobra.Command, args []string) {
 	log.Default().Println("Run Wallet ")
 	err := app.GetApp().CreateNewWallet(walletName)
 	if err != nil {

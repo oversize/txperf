@@ -15,7 +15,7 @@ var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Run txperf",
 	Long:  `Run txperf`,
-	RunE:  runRun,
+	RunE:  run,
 }
 
 var name string
@@ -24,7 +24,7 @@ func init() {
 	rootCmd.AddCommand(runCmd)
 }
 
-func runRun(cmd *cobra.Command, args []string) error {
+func run(cmd *cobra.Command, args []string) error {
 	log.Default().Println("Run Run Command")
 	err := app.GetApp().Run()
 	if err != nil {
